@@ -1,32 +1,34 @@
 #!/bin/bash
-# nginx - this script starts and stops the nginx daemon
+# tomcat - this script starts and stops the tomcat daemon
 #
 # chkconfig:   2345 85 15
-# description:  NGINX is an HTTP(S) server, HTTP(S) reverse \
-#               proxy and IMAP/POP3 proxy server
-# processname: nginx
-# config:      /usr/local/nginx/conf/nginx.conf
-# pidfile:     /var/run/nginx.pid
-# lockfile:     /var/lock/subsys/nginx
-
+# description: Tomcat 
+# processname: java
+# config:      /usr/local/var/tomcat/conf/server.xml
+# pidfile:     /var/run/tomcat/tomcat.pid
+# lockfile:     /var/lock/subsys/tomcat
 # Source function library.
 . /etc/rc.d/init.d/functions
 
-NGINX_HOME="/usr/local/nginx"
-NGINX_EXEC="${NGINX_HOME}/sbin/nginx"
-#NGINX_EXEC_USER="nginx"
-NGINX_CONFIG="${NGINX_HOME}/conf/nginx.conf"
+CATALINA_BASE="/usr/local/var/tomcat"
+CATALINA_STARTUP="${CATALINA_BASE}/bin/startup.sh"
+CATALINA_SHUTDOWN="${CATALINA_BASE}/bin/shutdown.sh"
+CATALINA_USER="tomcat"
 
-prog=$(basename ${NGINX_EXEC})
+prog="tomcat"
 
-lockfile=/var/lock/subsys/nginx
+lockfile=/var/lock/subsys/$prog
+
+if [ ! -e /var/run/$prog ]; then
+  mkdir -p /var/run/$prog
+  chown -R ${CATALINA_USER}:${CATALINA_USER} /var/run/$prog
+fi
 
 start() {
-    [ -x ${NGINX_EXEC} ] || exit 5
-    [ -f ${NGINX_CONFIG} ] || exit 6
+    [ -x ${CATALINA_STARTUP} ] || exit 5
     echo -n $"Starting $prog: "
-    #daemon --user=${NGINX_EXEC_USER} ${NGINX_EXEC} -c ${NGINX_CONFIG}
-    daemon ${NGINX_EXEC} -c ${NGINX_CONFIG}
+    daemon --user=${CATALINA_USER} ${CATALINA_STARTUP}
+    #daemon ${CATALINA_STARTUP}
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
@@ -35,7 +37,8 @@ start() {
 
 stop() {
     echo -n $"Stopping $prog: "
-    killproc $prog -QUIT
+    #killproc $prog -QUIT
+    /bin/bash ${CATALINA_SHUTDOWN}
     retval=$?
     echo
     [ $retval -eq 0 ] && rm -f $lockfile
