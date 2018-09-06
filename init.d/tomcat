@@ -2,7 +2,7 @@
 # tomcat - this script starts and stops the tomcat daemon
 #
 # chkconfig:   2345 85 15
-# description: Tomcat 
+# description: The Apache Tomcat software is an open source implementation of the Java Servlet, JavaServer Pages, Java Expression Language and Java WebSocket technologies.  
 # processname: java
 # config:      /usr/local/var/tomcat/conf/server.xml
 # pidfile:     /var/run/tomcat/tomcat.pid

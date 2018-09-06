@@ -5,7 +5,6 @@ ADD init.d /etc/init.d/
 ADD openjdk-1.8.0_131.tar.gz  /root/
 ADD apache-tomcat-8.5.33.tar.gz  /root/
 RUN adduser -s /sbin/nologin tomcat;\
-    #mkdir -p /var/run/tomcat;\
     mkdir -p /usr/java;\
     mv /root/openjdk-1.8.0_131 /usr/java;\
     ln -s /usr/java/openjdk-1.8.0_131 /usr/java/jre8;\
@@ -25,7 +24,6 @@ RUN adduser -s /sbin/nologin tomcat;\
     chmod -R o+rx /usr/local/tomcat/bin/*.sh;\
     chmod -R o+r /usr/local/tomcat/bin/*.jar;\
     chmod -R o+r /usr/local/tomcat/lib/*.jar;\
-    #chown -R tomcat:tomcat /var/run/tomcat;\
     chown -R tomcat:tomcat /usr/local/var/tomcat;\
     chkconfig --add tomcat;
 ENV HOME /root
